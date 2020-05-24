@@ -6,23 +6,51 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>ESPTeamsPresence authentication tester</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
-	<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.2.45/css/materialdesignicons.min.css">
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<style type="text/css">
-		a[target="_blank"]::after {content: '\29C9';}
+		section a[target="_blank"]::after {content: '\29C9';}
 	</style>
 </head>
 
 <body>
+	<nav class="navbar is-light is-spaced" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<div class="navbar-item">
+				<p class="title is-3">ESPTeamsPresence authentication tester</p>
+			</div>
+		</div>
+
+		<div id="navbarBasicExample" class="navbar-menu">
+			<div class="navbar-start">
+			</div>
+
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div class="buttons">
+						<a class="button is-primary" href="https://toblum.github.io/ESPTeamsPresence/" target="_blank">
+							ESPTeamsPresence project
+						</a>
+						<a class="button is-secondary" href="https://github.com/toblum/ESPTeamsPresenceAuthTester" target="_blank">
+							GitHub
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+
 	<section class="section">
 		<div class="container content">
-			<h1 class="title">ESPTeamsPresence authentication tester</h1>
-			<p>So you want to use the <a href="https://github.com/toblum/ESPTeamsPresence" target="_blank">ESPTeamsPresence</a> device and are not sure if you're allowed to use it on your Teams tenant or need to perform addtional steps? This page helps you by simulating the authentication flow used on the device directly in your browser. Now you try it out before you take further steps.</p>
+			<h1 class="title">Introduction</h1>
+			<p>So you want to use the <a href="https://github.com/toblum/ESPTeamsPresence" target="_blank">ESPTeamsPresence</a> device and are not sure if you're allowed to use it on your tenant where your Microsoft Teams lives or maybe need to perform addtional steps to make it work? This page helps you by simulating the authentication flow used on the device directly in your browser. Now you can try it out before you take further steps.</p>
 
 			<p><b>How does it work?</b></p>
-			<p>The ESPTeamsPresence device uses the device login flow with a multi-tenant Azure AD app that is supplied by the project. This is the easiest setup option for you, but it might be blocked on your tenant to use such apps. In this case you need consent from your admin to be allowed to use it. This page helps you to find out if that's the case.</p>
+			<p>The ESPTeamsPresence device uses the <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-device-code" target="_blank">OAuth 2.0 device authorization grant flow</a> with a multi-tenant Azure AD app that is supplied by the project. This is the easiest setup option for you, but it might be blocked on your tenant to use such apps. In this case you need consent from your admin to be allowed to use it. This page helps you to find out if that's the case.</p>
 
-			<p>This page simulates the same steps, the ESPTeamsPresence device does, to authenticate you against the Azure AD and use the Microsoft Graph. So you could easily try it out. <span class="is-italic">This page only simulates the steps and doesn't retrieve any authentication token.</span></p>
+			<p>This page simulates the same steps, the ESPTeamsPresence device does when you <a href="https://youtu.be/DH3zN3nLk9w" target="_blank">set it up</a>, to authenticate you against the Azure AD and use the Microsoft Graph. So you could easily try it out. <span class="is-italic">This page only simulates the steps and doesn't retrieve any authentication token. The <a href="https://github.com/toblum/ESPTeamsPresenceAuthTester" taregt="_blank">code of this page</a> is open for everyone to check.</span></p>
+
+			<p>Please note: This page checks if you're allowed to use the predefined multi-tenant Azure AD app definition. It's always possible for your tenant administrator to create a own single-tenant app definition and to use this with your ESPTeamsPresence device.</p>
 		</div>
 
 
@@ -33,7 +61,7 @@
 			<div class="field">
 				<label for="f_client_id" class="label">Tenant hostname or ID:</label>
 				<div class="control">
-					<input id="f_tenant_id" type="text" class="input" value="M365x945205.onmicrosoft.com">
+					<input id="f_tenant_id" type="text" class="input" value="contoso.onmicrosoft.com">
 				</div>
 				<p class="help">If your SharePoint URL is e.g. https://constoso.sharepoint.com, then your tenant name will be: contoso.onmicrosoft.com</p>
 			</div>
@@ -86,7 +114,6 @@
 						</p>
 					</div>
 				</div>
-
 			</div>
 		</div>
 		
@@ -125,7 +152,7 @@
 						<div class="column">
 							<p>
 								In this case, the administrator doesn't allow you to consent to the app by yourself.<br/>
-								But you can enter a justification, why you would like to use the app. The responsible persons are notified of your request and can accept or decline your request. You'll be notified by e-mail when this happens.
+								But you can enter a justification, why you would like to use the app. The responsible persons are notified of your request and can accept or decline it. You'll be notified by e-mail when this happens.
 							</p>
 							<img class="image" src="assets/consent_justification.png" alt="Consent with justification">
 						</div>
