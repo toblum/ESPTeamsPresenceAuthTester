@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>ESPTeamsPresence authentication tester</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+	<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.2.45/css/materialdesignicons.min.css">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<style type="text/css">
+		a[target="_blank"]::after {content: '\29C9';}
+	</style>
+</head>
+
+<body>
+	<section class="section">
+		<div class="container content">
+			<h1 class="title">ESPTeamsPresence authentication tester</h1>
+			<p>So you want to use the <a href="https://github.com/toblum/ESPTeamsPresence" target="_blank">ESPTeamsPresence</a> device and are not sure if you're allowed to use it on your Teams tenant or need to perform addtional steps? This page helps you by simulating the authentication flow used on the device directly in your browser. Now you try it out before you take further steps.</p>
+
+			<p><b>How does it work?</b></p>
+			<p>The ESPTeamsPresence device uses the device login flow with a multi-tenant Azure AD app that is supplied by the project. This is the easiest setup option for you, but it might be blocked on your tenant to use such apps. In this case you need consent from your admin to be allowed to use it. This page helps you to find out if that's the case.</p>
+
+			<p>This page simulates the same steps, the ESPTeamsPresence device does, to authenticate you against the Azure AD and use the Microsoft Graph. So you could easily try it out. <span class="is-italic">This page only simulates the steps and doesn't retrieve any authentication token.</span></p>
+		</div>
+
+
+		<div class="container box">
+			<div class="content">
+				<h2 class="title is-4">Step 1: Enter your environment information</h2>
+			</div>			
+			<div class="field">
+				<label for="f_client_id" class="label">Tenant hostname or ID:</label>
+				<div class="control">
+					<input id="f_tenant_id" type="text" class="input" value="M365x945205.onmicrosoft.com">
+				</div>
+				<p class="help">If your SharePoint URL is e.g. https://constoso.sharepoint.com, then your tenant name will be: contoso.onmicrosoft.com</p>
+			</div>
+			<div class="field">
+				<label for="f_client_id" class="label">Client-ID of the Azure-AD app (supplied by ESPTeamsPresence):</label>
+				<div class="control">
+					<input id="f_client_id" type="text" class="input" value="3837bbf0-30fb-47ad-bce8-f460ba9880c3" readonly disabled>
+				</div>
+				<p class="help">Predefined value of the standard multi-tenant app.</p>
+			</div>
+			<div class="field is-grouped">
+				<div class="control">
+				  <button id="btn_next_1" class="button is-link">Next &raquo;</button>
+				</div>
+			  </div>
+		</div>
+
+		<article class="message is-danger is-hidden" id="c_error_step_2">
+			<div class="message-body">
+				Sorry, we couldn't retrieve a device login token. Please double check your entered tenant name.
+			</div>
+		  </article>
+
+
+		<div class="container box is-hidden" id="c_step_2">
+			<div class="content">
+				<h2 class="title is-4">Step 2: Perform device login</h2>
+
+				<p>Your personal device login code is: <span class="tag is-light is-family-code" id="c_device_login_flow"></span></p>
+				<p>Instructions: <span id="c_message"></span></p>
+
+				<p>
+					<a class="button is-link" id="c_verification_uri" target="_blank">Open device login&nbsp;</a>
+				</p>
+
+				<hr>
+				<div class="columns is-desktop">
+					<div class="column">
+						<p>
+							<p class="subtitle is-5">First step: Enter device code</p>
+							<p>Please enter the code from above to start device login flow.</p>
+							<img class="image" src="assets/device_code.png" alt="Enter device code">
+						</p>
+					</div>
+					<div class="column">
+						<p>
+							<p class="subtitle is-5">Second step: Login with your account</p>
+							<p>Login with the account you want to use the device with.</p>
+							<img class="image" src="assets/login.png" alt="Login with your account">
+						</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		
+		
+		<div class="container box is-hidden" id="c_step_3">
+			<div class="content">
+				<h2 class="title is-4">Step 3: Consent to the app</h2>
+
+				<p>Depending on your tenant settings, the next steps will differ.</p>
+				
+				<div class="tabs is-centered is-toggle is-fullwidth">
+					<ul>
+						<li class="tb-tab is-active"><a class="tb-tab-link" data-target-id="tab-content-1">Users are allowed to consent</a></li>
+						<li class="tb-tab"><a class="tb-tab-link" data-target-id="tab-content-2">User are not allowed to consent, with admin request</a></li>
+						<li class="tb-tab"><a class="tb-tab-link" data-target-id="tab-content-3">Only admins are allowed to consent</a></li>
+					</ul>
+				</div>
+
+				<div id="tab-content-1" class="tb-tab-content">
+					<div class="columns is-desktop">
+						<div class="column">
+							<p>
+								If you're prompted to consent to the app, everything is fine.<br/>
+								Just "Accept" and you're good to go.
+							</p>
+							<img class="image" src="assets/consent.png" alt="Consent by user">
+						</div>
+						<div class="column">
+							<p>After accepting you should see this success screen:</p>
+							<img class="image" src="assets/success.png" alt="Success">
+						</div>
+					</div>
+				</div>
+				<div id="tab-content-2" class="tb-tab-content is-hidden">
+					<div class="columns is-desktop">
+						<div class="column">
+							<p>
+								In this case, the administrator doesn't allow you to consent to the app by yourself.<br/>
+								But you can enter a justification, why you would like to use the app. The responsible persons are notified of your request and can accept or decline your request. You'll be notified by e-mail when this happens.
+							</p>
+							<img class="image" src="assets/consent_justification.png" alt="Consent with justification">
+						</div>
+						<div class="column">
+							<p>After requesting approval you should see this screen:</p>
+							<img class="image" src="assets/success_justification.png" alt="Success with justification">
+						</div>
+					</div>
+				</div>
+				<div id="tab-content-3" class="tb-tab-content is-hidden">
+					<div class="columns is-desktop">
+						<div class="column">
+							<p>
+								When you see this screen, only admins are allowed to consent.
+							</p>
+							<img class="image" src="assets/consent_only_admin.png" alt="Consent with justification">
+						</div>
+						<div class="column">
+							<p>In this case you have to contact an tenant administrator yourself and ask her or him to approve the app.</p>
+							<p>This works by the administrator performing the same steps. He should then see the next dialog and can select the "Consent on behalf of your organization" option, which allows the users on the tenant to use the app.</p>
+							<img class="image" src="assets/consent_for_org.png" alt="Consent with justification">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		const getDeviceLoginCode = async (tenant_id) => {
+			console.log("getDeviceLoginCode()");
+
+			axios({
+				method: 'get',
+				url: `/api/getDeviceLoginCode?tenant_id=${tenant_id}`
+			}).then(result => {
+				console.log("getDeviceLoginCode() - Result:", result);
+				
+				if (!result.data.error) {
+					const data = (result.data || {}).data || {};
+
+					if (!(result.data || {}).error) {
+						document.getElementById("c_step_2").classList.remove("is-hidden");
+						document.getElementById("c_step_3").classList.remove("is-hidden");
+						document.getElementById("c_device_login_flow").innerText = data.user_code;
+						document.getElementById("c_message").innerText = data.message;
+						document.getElementById("c_verification_uri").setAttribute("href", data.verification_uri);
+					} else {
+						document.getElementById("c_error_step_2").classList.remove("is-hidden");
+					}
+				}
+			}).catch(error => {
+				document.getElementById("c_error_step_2").classList.remove("is-hidden");
+				console.error("Error requesting device login data", error);
+			});
+		};
+
+		const init = async () => {
+			// Register click handler
+			document.getElementById("btn_next_1").addEventListener("click", async e => {
+				const tenant_id = document.getElementById("f_tenant_id").value;
+				document.getElementById("btn_next_1").classList.add("is-loading");
+				const dl_data = await getDeviceLoginCode(tenant_id);
+				document.getElementById("btn_next_1").classList.remove("is-loading");
+			}, false);
+
+			// Register tab handler
+			const tab_links = Object.values(document.getElementsByClassName("tb-tab-link"));
+			
+			tab_links.forEach(link => {
+				link.addEventListener("click", event => {
+					event.preventDefault();
+					// console.log("##", event);
+
+
+					// Deactivate all tabs
+					const tab_links = Object.values(document.getElementsByClassName("tb-tab"));
+					tab_links.forEach(tab => {
+						tab.classList.remove("is-active");
+					});
+					// Activate clicked tab
+					(event.target || {}).parentElement.classList.add("is-active");
+
+
+					// Hide all tab contents
+					const tab_contents = Object.values(document.getElementsByClassName("tb-tab-content"));
+					tab_contents.forEach(tab_content => {
+						tab_content.classList.add("is-hidden");
+					});
+					// Activate tab content that is referenced in tab
+					const target_id = (event.target || {}).getAttribute("data-target-id");
+					document.getElementById(target_id).classList.remove("is-hidden")
+				});
+			});
+		};
+
+		init();
+	</script>
+</body>
+
+</html>
